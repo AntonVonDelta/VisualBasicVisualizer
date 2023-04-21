@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using VBVisualizer.Models;
 
 namespace VBVisualizer.Parsers {
-    public class PropertiesVisitor : VisualBasic6ParserBaseVisitor<VBControl> {
+    public class PropertiesVisitor : VisualBasic6ParserBaseVisitor<object> {
         enum ControlProperty {
             Unknown,
             BorderStyle,
@@ -25,7 +25,7 @@ namespace VBVisualizer.Parsers {
         }
 
         private VBForm _form;
-        private Stack<VBControl> _controls = new Stack<VBControl>();
+        private VBControl _currentControl;
 
         public VBForm Result => _form;
 
@@ -61,52 +61,47 @@ namespace VBVisualizer.Parsers {
             return parent.GetChild(indexOfCurrentContext + 1);
         }
 
-        public override VBControl VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
-            var formControl = _form;
+        public override object VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
             var control = GetControl(context);
+            var prevControl = _currentControl;
 
-            if (!(control is VBForm) && formControl == null) throw new Exception("Form not defined");
-            if (control is VBForm && formControl != null) throw new Exception("Form already defined");
+            if (control is VBForm) _form = control as VBForm;
+            if (_currentControl != null) {
+                _currentControl.AddControl(control);
+            }
 
-            _controls.Push(control);
-
-            if (control is VBForm) _form = (VBForm)control;
-            else if (control is VBLabel) formControl.AddLabel(control as VBLabel);
-            else if (control is VBButton) formControl.AddButton(control as VBButton);
-
-            VisitChildren(context);
-
-            _controls.Pop();
+            _currentControl = control;
+            base.VisitControlProperties(context);
+            _currentControl = prevControl;
 
             return null;
         }
 
         public override object VisitCp_SingleProperty([NotNull] VisualBasic6Parser.Cp_SinglePropertyContext context) {
-            var control = _controls.Peek();
             var propertyValue = context.cp_PropertyValue().literal().GetText();
             var controlPropertyType = GetControlProperty(context);
 
             switch (controlPropertyType) {
                 case ControlProperty.ClientHeight:
-                    control.Height = int.Parse(propertyValue);
+                    _currentControl.Height = int.Parse(propertyValue);
                     break;
 
                 case ControlProperty.ClientWidth:
-                    control.Width = int.Parse(propertyValue);
+                    _currentControl.Width = int.Parse(propertyValue);
                     break;
 
                 case ControlProperty.ClientTop:
-                    control.Top = int.Parse(propertyValue);
+                    _currentControl.Top = int.Parse(propertyValue);
                     break;
                 case ControlProperty.ClientLeft:
-                    control.Left = int.Parse(propertyValue);
+                    _currentControl.Left = int.Parse(propertyValue);
                     break;
 
                 case ControlProperty.ForeColor:
                     var colorHexValue = Regex.Replace(propertyValue, @"[&H]", "");
                     var colorValue = int.Parse(colorHexValue, System.Globalization.NumberStyles.HexNumber);
 
-                    control.Forecolor = Color.FromArgb(colorValue);
+                    _currentControl.Forecolor = Color.FromArgb(colorValue);
                     break;
             }
 

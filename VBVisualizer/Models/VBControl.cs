@@ -14,8 +14,14 @@ namespace VBVisualizer.Models {
         public int Top { get; set; }
         public Color Forecolor { get; set; }
 
+        protected List<VBControl> _controls = new List<VBControl>();
+
         public VBControl(string name) {
             Name = name;
+        }
+
+        public void AddControl(VBControl control) {
+            _controls.Add(control);
         }
     }
 }
