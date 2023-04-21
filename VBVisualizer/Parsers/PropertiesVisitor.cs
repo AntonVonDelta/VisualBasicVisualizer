@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using VBVisualizer.Models;
 
 namespace VBVisualizer.Parsers {
-    public class PropertiesVisitor : VisualBasic6ParserBaseVisitor<object> {
+    public class PropertiesVisitor : VisualBasic6ParserBaseVisitor<VBControl> {
         enum ControlProperty {
             Unknown,
             BorderStyle,
@@ -61,7 +61,7 @@ namespace VBVisualizer.Parsers {
             return parent.GetChild(indexOfCurrentContext + 1);
         }
 
-        public override object VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
+        public override VBControl VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
             var formControl = _form;
             var control = GetControl(context);
 
