@@ -38,13 +38,26 @@ namespace VBVisualizer {
             return null;
         }
 
+        private void PaintForm(VBForm form, Control surface) {
+            surface.Width = (int)(1.2 * form.Width);
+            surface.Height = (int)(1.2 * form.Height);
+
+            using (var graphics = surface.CreateGraphics()) {
+                graphics.Clear(SystemColors.Control);
+                form.Paint(graphics);
+            }
+        }
+
+
         private void ProcessCode(string data) {
             var tree = GetTree(data);
             var propertiesVisitor = new PropertiesVisitor();
             VBForm form;
-
+            
             propertiesVisitor.Visit(tree);
             form = propertiesVisitor.Result;
+
+            PaintForm(form, panel1);
         }
 
         private void btnOpen_Click(object sender, EventArgs e) {

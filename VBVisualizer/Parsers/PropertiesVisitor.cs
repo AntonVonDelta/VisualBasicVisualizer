@@ -12,20 +12,9 @@ using VBVisualizer.Models;
 
 namespace VBVisualizer.Parsers {
     public class PropertiesVisitor : VisualBasic6ParserBaseVisitor<object> {
-        enum ControlProperty {
-            Unknown,
-            BorderStyle,
-            Caption,
-            ClientHeight,
-            ClientWidth,
-            ClientTop,
-            ClientLeft,
-            ForeColor,
-            BackColor
-        }
-
         private VBForm _form;
         private VBControl _currentControl;
+        private bool _insideNestedProperty;
 
         public VBForm Result => _form;
 
@@ -43,27 +32,11 @@ namespace VBVisualizer.Parsers {
             return new VBUnknown(controlName);
         }
 
-        private ControlProperty GetControlProperty(VisualBasic6Parser.Cp_SinglePropertyContext context) {
-            ControlProperty result;
-            var propertyName = context.implicitCallStmt_InStmt().iCS_S_VariableOrProcedureCall().ambiguousIdentifier().GetText();
-
-            if (!Enum.TryParse(propertyName, true, out result)) {
-                result = ControlProperty.Unknown;
-            }
-
-            return result;
-        }
-
-        public IParseTree GetNextSibling(ParserRuleContext context) {
-            var parent = (ParserRuleContext)context.parent;
-            var indexOfCurrentContext = parent.children.IndexOf(context);
-
-            return parent.GetChild(indexOfCurrentContext + 1);
-        }
-
         public override object VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
             var control = GetControl(context);
             var prevControl = _currentControl;
+
+            control.Parent = _currentControl;
 
             if (control is VBForm) _form = control as VBForm;
             if (_currentControl != null) {
@@ -77,33 +50,25 @@ namespace VBVisualizer.Parsers {
             return null;
         }
 
+        public override object VisitCp_NestedProperty([NotNull] VisualBasic6Parser.Cp_NestedPropertyContext context) {
+            _insideNestedProperty = true;
+            base.VisitCp_NestedProperty(context);
+            _insideNestedProperty = false;
+
+            return null;
+        }
+
         public override object VisitCp_SingleProperty([NotNull] VisualBasic6Parser.Cp_SinglePropertyContext context) {
-            var propertyValue = context.cp_PropertyValue().literal().GetText();
-            var controlPropertyType = GetControlProperty(context);
+            string propertyName;
+            string propertyValue;
 
-            switch (controlPropertyType) {
-                case ControlProperty.ClientHeight:
-                    _currentControl.Height = int.Parse(propertyValue);
-                    break;
+            if (_insideNestedProperty) return null;
+            if (context.implicitCallStmt_InStmt() == null || context.cp_PropertyValue() == null) return null;
 
-                case ControlProperty.ClientWidth:
-                    _currentControl.Width = int.Parse(propertyValue);
-                    break;
+            propertyName = context.implicitCallStmt_InStmt().iCS_S_VariableOrProcedureCall().ambiguousIdentifier().GetText();
+            propertyValue = context.cp_PropertyValue().literal().GetText();
 
-                case ControlProperty.ClientTop:
-                    _currentControl.Top = int.Parse(propertyValue);
-                    break;
-                case ControlProperty.ClientLeft:
-                    _currentControl.Left = int.Parse(propertyValue);
-                    break;
-
-                case ControlProperty.ForeColor:
-                    var colorHexValue = Regex.Replace(propertyValue, @"[&H]", "");
-                    var colorValue = int.Parse(colorHexValue, System.Globalization.NumberStyles.HexNumber);
-
-                    _currentControl.Forecolor = Color.FromArgb(colorValue);
-                    break;
-            }
+            _currentControl.AddProperty(propertyName, propertyValue);
 
             return null;
         }
