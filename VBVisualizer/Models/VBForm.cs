@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
     public class VBForm : VBControl {
-        public VBForm(string formName) : base(formName) {
+        public VBForm() {
         }
-
-        public void Add
-
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
     public class VBButton : VBControl {
-        public VBButton(string buttonName) : base(buttonName) {
+        public VBButton() {
 
         }
     }
