@@ -24,9 +24,10 @@ namespace VBVisualizer.Parsers {
             BackColor
         }
 
+        private VBForm _form;
         private Stack<VBControl> _controls = new Stack<VBControl>();
 
-        public VBForm Result => _controls.FirstOrDefault() as VBForm;
+        public VBForm Result => _form;
 
         private VBControl GetControl(VisualBasic6Parser.ControlPropertiesContext context) {
             string controlType;
@@ -39,7 +40,7 @@ namespace VBVisualizer.Parsers {
             if (controlType == "VB.Label") return new VBLabel(controlName);
             if (controlType == "VB.CommandButton") return new VBButton(controlName);
 
-            return null;
+            return new VBUnknown(controlName);
         }
 
         private ControlProperty GetControlProperty(VisualBasic6Parser.Cp_SinglePropertyContext context) {
@@ -61,50 +62,22 @@ namespace VBVisualizer.Parsers {
         }
 
         public override object VisitControlProperties([NotNull] VisualBasic6Parser.ControlPropertiesContext context) {
-            var controlType = GetControlType(context);
+            var formControl = _form;
+            var control = GetControl(context);
 
-            return null;
-        }
+            if (!(control is VBForm) && formControl == null) throw new Exception("Form not defined");
+            if (control is VBForm && formControl != null) throw new Exception("Form already defined");
 
-        public override object VisitCp_ControlType([NotNull] VisualBasic6Parser.Cp_ControlTypeContext context) {
-            var controlType = GetControlType(context);
-            var formControl = _controls.FirstOrDefault() as VBForm;
+            _controls.Push(control);
 
-            if (controlType != ControlType.Form && formControl == null) throw new Exception("Form not defined");
+            if (control is VBForm) _form = (VBForm)control;
+            else if (control is VBLabel) formControl.AddLabel(control as VBLabel);
+            else if (control is VBButton) formControl.AddButton(control as VBButton);
 
-            switch (controlType) {
-                case ControlType.Form:
-                    if (formControl != null) throw new Exception("Form control already defined");
+            VisitChildren(context);
 
-                    _controls.Push(new VBForm());
-                    break;
+            _controls.Pop();
 
-                case ControlType.Label:
-                    var label = new VBLabel();
-
-                    formControl.AddLabel(label);
-                    _controls.Push(label);
-                    break;
-
-                case ControlType.Button:
-                    var button = new VBButton();
-
-                    formControl.AddButton(button);
-                    _controls.Push(button);
-                    break;
-
-                default:
-                    _controls.Push(new VBControl());
-                    break;
-            }
-
-            return null;
-        }
-
-        public override object VisitCp_ControlIdentifier([NotNull] VisualBasic6Parser.Cp_ControlIdentifierContext context) {
-            var control = _controls.Peek();
-
-            control.Name = context.ambiguousIdentifier().GetText();
             return null;
         }
 
