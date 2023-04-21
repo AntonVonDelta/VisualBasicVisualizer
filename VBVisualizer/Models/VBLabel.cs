@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
     public class VBLabel : VBControl {
-        public VBLabel() {
+        public VBLabel(string name) : base(name) {
 
         }
     }

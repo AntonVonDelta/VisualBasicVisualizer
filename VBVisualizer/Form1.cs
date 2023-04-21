@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using VBVisualizer.Models;
 using VBVisualizer.Parsers;
 using VBVisualizer.Utils;
 
@@ -40,8 +41,10 @@ namespace VBVisualizer {
         private void ProcessCode(string data) {
             var tree = GetTree(data);
             var propertiesVisitor = new PropertiesVisitor();
+            VBForm form;
 
             propertiesVisitor.Visit(tree);
+            form = propertiesVisitor.Result;
         }
 
         private void btnOpen_Click(object sender, EventArgs e) {
@@ -52,7 +55,9 @@ namespace VBVisualizer {
                 using (var sr = new StreamReader(openFileDialog1.OpenFile())) {
                     ProcessCode(sr.ReadToEnd());
                 }
-            } catch { }
+            } catch (Exception ex) {
+
+            }
         }
     }
 }

@@ -14,7 +14,8 @@ namespace VBVisualizer.Models {
         public int Top { get; set; }
         public Color Forecolor { get; set; }
 
-        public VBControl() {
+        public VBControl(string name) {
+            Name = name;
         }
     }
 }
