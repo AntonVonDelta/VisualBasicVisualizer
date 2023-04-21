@@ -17,7 +17,6 @@ namespace VBVisualizer.Parsers {
             Button
         }
 
-        private VBForm _form;
         private Stack<VBControl> _controls = new Stack<VBControl>();
 
         public VBForm Result => _form;
@@ -46,20 +45,32 @@ namespace VBVisualizer.Parsers {
 
         public override object VisitCp_ControlType([NotNull] VisualBasic6Parser.Cp_ControlTypeContext context) {
             var controlType = GetControlType(context);
+            var formControl = _controls.FirstOrDefault();
 
-            _currentControlType = controlType;
+            if (controlType != ControlType.Form && formControl == null) throw new Exception("Form not defined");
 
-            if (controlType == ControlType.Form) {
-                if (_form != null) {
-                    throw new Exception("Form control already defined");
-                }
+            switch (controlType) {
+                case ControlType.Form:
+                    if (formControl != null) throw new Exception("Form control already defined");
+                    _controls.Push(new VBForm());
+                    break;
+
+                case ControlType.Label:
+
+                    break;
+
+                case ControlType.Button:
+
+                    break;
             }
 
             return null;
         }
 
         public override object VisitCp_ControlIdentifier([NotNull] VisualBasic6Parser.Cp_ControlIdentifierContext context) {
-            _form = new VBForm(context.ambiguousIdentifier().GetText());
+            var control = _controls.Peek();
+
+            control.Name = context.ambiguousIdentifier().GetText();
             return null;
         }
     }
