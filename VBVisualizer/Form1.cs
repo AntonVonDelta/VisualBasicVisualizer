@@ -64,6 +64,13 @@ namespace VBVisualizer {
             PaintForm(form, formPanel);
         }
 
+        private void OnControlSelected(VBControl control) {
+            dgvProperties.DataSource = control.GetProperties();
+        }
+
+        private void Form1_Load(object sender, EventArgs e) {
+        }
+
         private void btnOpen_Click(object sender, EventArgs e) {
             openFileDialog1.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
             openFileDialog1.ShowDialog();
@@ -79,8 +86,6 @@ namespace VBVisualizer {
 
         private void formPanel_Paint(object sender, PaintEventArgs e) {
             if (_loadedForm == null) return;
-
-            e.Graphics.Clear(SystemColors.Control);
             _loadedForm.Paint(e.Graphics);
         }
 
@@ -115,12 +120,12 @@ namespace VBVisualizer {
                 }
 
                 deepestHitControl = hitResult.Last();
-
                 if (deepestHitControl == _hoveringControl) return;
                 if (_hoveringControl != null) _hoveringControl.Focused = false;
 
-                deepestHitControl.Focused = true;
                 _hoveringControl = deepestHitControl;
+                _hoveringControl.Focused = true;
+                OnControlSelected(_hoveringControl);
 
                 formPanel.Invalidate();
             }

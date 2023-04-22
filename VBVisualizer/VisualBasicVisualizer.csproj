@@ -59,7 +59,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\VBButton.cs" />
+    <Compile Include="Models\VBCaptionControl.cs" />
     <Compile Include="Models\VBControl.cs" />
+    <Compile Include="Models\VBControlProperty.cs" />
     <Compile Include="Models\VBForm.cs" />
     <Compile Include="Models\VBLabel.cs" />
     <Compile Include="Models\VBListView.cs" />

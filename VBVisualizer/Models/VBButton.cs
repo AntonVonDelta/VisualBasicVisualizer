@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
-    public class VBButton : VBControl {
+    public class VBButton : VBCaptionControl {
         public override Color BackgroundColor => SystemColors.ControlLight;
 
         public VBButton(string name) : base(name) {

@@ -13,6 +13,8 @@ namespace VBVisualizer.Models {
         public VBControl Parent { get; set; }
 
         public bool Focused { get; set; }
+        public Region Region => new Region(new Rectangle(Left, Top, Width, Height));
+
         public int Height { get; set; }
         public int Width { get; set; }
         public int Left { get; set; }
@@ -31,12 +33,15 @@ namespace VBVisualizer.Models {
         protected int TwipsToPixels(int twips) {
             return (int)(twips * 0.0666666667);
         }
+        protected bool PointInside(Point location) {
+            return location.X >= AbsoluteLeft && location.X <= AbsoluteLeft + Width &&
+                   location.Y >= AbsoluteTop && location.Y <= AbsoluteTop + Height;
+        }
 
         public void AddControl(VBControl control) {
             _controls.Add(control);
         }
-
-        public void AddProperty(string name, string value) {
+        public virtual void AddProperty(string name, string value) {
             switch (name.ToLower()) {
                 case "clientheight":
                     Height = TwipsToPixels(int.Parse(value)); break;
@@ -68,10 +73,14 @@ namespace VBVisualizer.Models {
                     break;
             }
         }
-
-        protected bool PointInside(Point location) {
-            return location.X >= AbsoluteLeft && location.X <= AbsoluteLeft + Width &&
-                   location.Y >= AbsoluteTop && location.Y <= AbsoluteTop + Height;
+        public virtual List<VBControlProperty> GetProperties() {
+            return new List<VBControlProperty> {
+                new VBControlProperty("Name",Name),
+                new VBControlProperty("Height",Height),
+                new VBControlProperty("Width",Width),
+                new VBControlProperty("Left",Left),
+                new VBControlProperty("Top",Top)
+            };
         }
 
         public virtual List<VBControl> HitTest(Point location) {
@@ -104,13 +113,11 @@ namespace VBVisualizer.Models {
                 child.Paint(graphics);
             }
         }
-
         public virtual void PaintBorder(Graphics graphics) {
             using (var pen = new Pen(Color.Black, 1)) {
                 graphics.DrawRectangle(pen, AbsoluteLeft, AbsoluteTop, Width, Height);
             }
         }
-
         public virtual void PaintHighlight(Graphics graphics) {
             using (var pen = new Pen(Color.Black, 1)) {
                 float[] dashValues = { 5, 2 };
@@ -119,7 +126,6 @@ namespace VBVisualizer.Models {
                 graphics.DrawRectangle(pen, AbsoluteLeft, AbsoluteTop, Width, Height);
             }
         }
-
         public virtual void PaintCaption(Graphics graphics) {
             using (var font = new Font(FontFamily.GenericMonospace, 8)) {
                 using (var brush = new SolidBrush(Color.Black)) {

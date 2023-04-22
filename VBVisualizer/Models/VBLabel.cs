@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
-    public class VBLabel : VBControl {
-        public override Color BackgroundColor => Color.White;
+    public class VBLabel : VBCaptionControl {
+        public override Color BackgroundColor => Color.Transparent;
 
         public VBLabel(string name) : base(name) {
 

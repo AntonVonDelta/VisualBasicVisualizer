@@ -31,10 +31,12 @@
             this.formLayout = new System.Windows.Forms.TableLayoutPanel();
             this.toolbarPanel = new System.Windows.Forms.Panel();
             this.formPanel = new System.Windows.Forms.Panel();
+            this.dgvProperties = new System.Windows.Forms.DataGridView();
             this.mainTableLayout.SuspendLayout();
             this.viewPanel.SuspendLayout();
             this.formBorderPanel.SuspendLayout();
             this.formLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProperties)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -44,10 +46,11 @@
             // mainTableLayout
             // 
             this.mainTableLayout.ColumnCount = 2;
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 57.07602F));
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 42.92398F));
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 81.17002F));
+            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.82998F));
             this.mainTableLayout.Controls.Add(this.btnOpen, 0, 0);
             this.mainTableLayout.Controls.Add(this.viewPanel, 0, 1);
+            this.mainTableLayout.Controls.Add(this.dgvProperties, 1, 1);
             this.mainTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTableLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTableLayout.Name = "mainTableLayout";
@@ -70,13 +73,12 @@
             // viewPanel
             // 
             this.viewPanel.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.mainTableLayout.SetColumnSpan(this.viewPanel, 2);
             this.viewPanel.Controls.Add(this.formBorderPanel);
             this.viewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.viewPanel.Location = new System.Drawing.Point(0, 39);
             this.viewPanel.Margin = new System.Windows.Forms.Padding(0);
             this.viewPanel.Name = "viewPanel";
-            this.viewPanel.Size = new System.Drawing.Size(1094, 658);
+            this.viewPanel.Size = new System.Drawing.Size(888, 658);
             this.viewPanel.TabIndex = 7;
             // 
             // formBorderPanel
@@ -132,6 +134,22 @@
             this.formPanel.MouseLeave += new System.EventHandler(this.formPanel_MouseLeave);
             this.formPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.formPanel_MouseMove);
             // 
+            // dgvProperties
+            // 
+            this.dgvProperties.AllowUserToAddRows = false;
+            this.dgvProperties.AllowUserToDeleteRows = false;
+            this.dgvProperties.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvProperties.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvProperties.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProperties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvProperties.Location = new System.Drawing.Point(888, 39);
+            this.dgvProperties.Margin = new System.Windows.Forms.Padding(0);
+            this.dgvProperties.Name = "dgvProperties";
+            this.dgvProperties.ReadOnly = true;
+            this.dgvProperties.RowHeadersVisible = false;
+            this.dgvProperties.Size = new System.Drawing.Size(206, 658);
+            this.dgvProperties.TabIndex = 8;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,6 +158,7 @@
             this.Controls.Add(this.mainTableLayout);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.mainTableLayout.ResumeLayout(false);
             this.viewPanel.ResumeLayout(false);
             this.viewPanel.PerformLayout();
@@ -147,6 +166,7 @@
             this.formBorderPanel.PerformLayout();
             this.formLayout.ResumeLayout(false);
             this.formLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProperties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -161,6 +181,7 @@
         private System.Windows.Forms.TableLayoutPanel formLayout;
         private System.Windows.Forms.Panel toolbarPanel;
         private System.Windows.Forms.Panel formPanel;
+        private System.Windows.Forms.DataGridView dgvProperties;
     }
 }
 
