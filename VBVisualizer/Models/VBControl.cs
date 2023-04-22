@@ -106,7 +106,7 @@ namespace VBVisualizer.Models {
 
         public virtual void PaintHighlight(Graphics graphics) {
             using (var pen = new Pen(Color.Black, 1)) {
-                float[] dashValues = { 5, 2, 15, 4 };
+                float[] dashValues = { 5, 2 };
 
                 pen.DashPattern = dashValues;
                 graphics.DrawRectangle(pen, AbsoluteLeft, AbsoluteTop, Width, Height);

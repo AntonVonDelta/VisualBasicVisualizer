@@ -27,7 +27,6 @@
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.btnOpen = new System.Windows.Forms.Button();
             this.viewPanel = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.formBorderPanel = new System.Windows.Forms.Panel();
             this.formLayout = new System.Windows.Forms.TableLayoutPanel();
             this.toolbarPanel = new System.Windows.Forms.Panel();
@@ -72,7 +71,6 @@
             // 
             this.viewPanel.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.mainTableLayout.SetColumnSpan(this.viewPanel, 2);
-            this.viewPanel.Controls.Add(this.button1);
             this.viewPanel.Controls.Add(this.formBorderPanel);
             this.viewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.viewPanel.Location = new System.Drawing.Point(0, 39);
@@ -80,16 +78,6 @@
             this.viewPanel.Name = "viewPanel";
             this.viewPanel.Size = new System.Drawing.Size(1094, 658);
             this.viewPanel.TabIndex = 7;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.button1.Location = new System.Drawing.Point(387, 507);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(150, 32);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = false;
             // 
             // formBorderPanel
             // 
@@ -173,7 +161,6 @@
         private System.Windows.Forms.TableLayoutPanel formLayout;
         private System.Windows.Forms.Panel toolbarPanel;
         private System.Windows.Forms.Panel formPanel;
-        private System.Windows.Forms.Button button1;
     }
 }
 

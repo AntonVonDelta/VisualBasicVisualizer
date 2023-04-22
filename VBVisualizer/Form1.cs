@@ -43,8 +43,10 @@ namespace VBVisualizer {
         }
 
         private void PaintForm(VBForm form, Control surface) {
-            surface.Width = form.Width;
-            surface.Height = form.Height;
+            int formPadding = 1;
+
+            surface.Width = form.Width + formPadding;
+            surface.Height = form.Height + formPadding;
 
             _loadedForm = form;
             surface.Invalidate();
