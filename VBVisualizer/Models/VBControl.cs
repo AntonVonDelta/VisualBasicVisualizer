@@ -55,9 +55,16 @@ namespace VBVisualizer.Models {
                     Top = TwipsToPixels(int.Parse(value)); break;
 
                 case "forecolor":
-                    var colorHexValue = Regex.Replace(value, @"[&H]", "");
-                    var color = Color.FromArgb(int.Parse(colorHexValue, System.Globalization.NumberStyles.HexNumber));
-                    Forecolor = color;
+                    int convertedValue;
+
+                    if (value.Contains("&")) {
+                        string hexValue = Regex.Replace(value, @"[&H]", "");
+                        convertedValue = int.Parse(hexValue, System.Globalization.NumberStyles.HexNumber);
+                    } else {
+                        convertedValue = int.Parse(value);
+                    }
+
+                    Forecolor = Color.FromArgb(convertedValue);
                     break;
             }
         }
