@@ -28,6 +28,8 @@ namespace VBVisualizer.Parsers {
             if (controlType == "VB.Form") return new VBForm(controlName);
             if (controlType == "VB.Label") return new VBLabel(controlName);
             if (controlType == "VB.CommandButton") return new VBButton(controlName);
+            if (controlType == "VB.Frame") return new VBFrame(controlName);
+            if (controlType == "MSComctlLib.ListView") return new VBListView(controlName);
 
             return new VBUnknown(controlName);
         }

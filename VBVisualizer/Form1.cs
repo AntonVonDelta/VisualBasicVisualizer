@@ -15,6 +15,10 @@ using VBVisualizer.Utils;
 
 namespace VBVisualizer {
     public partial class Form1 : Form {
+        private VBForm _loadedForm;
+        private VBControl _hoveringControl;
+        private Point _originClickToolbar;
+
         public Form1() {
             InitializeComponent();
         }
@@ -39,13 +43,11 @@ namespace VBVisualizer {
         }
 
         private void PaintForm(VBForm form, Control surface) {
-            surface.Width = (int)(1.2 * form.Width);
-            surface.Height = (int)(1.2 * form.Height);
+            surface.Width = form.Width;
+            surface.Height = form.Height;
 
-            using (var graphics = surface.CreateGraphics()) {
-                graphics.Clear(SystemColors.Control);
-                form.Paint(graphics);
-            }
+            _loadedForm = form;
+            surface.Invalidate();
         }
 
 
@@ -53,11 +55,11 @@ namespace VBVisualizer {
             var tree = GetTree(data);
             var propertiesVisitor = new PropertiesVisitor();
             VBForm form;
-            
+
             propertiesVisitor.Visit(tree);
             form = propertiesVisitor.Result;
 
-            PaintForm(form, panel1);
+            PaintForm(form, formPanel);
         }
 
         private void btnOpen_Click(object sender, EventArgs e) {
@@ -71,6 +73,60 @@ namespace VBVisualizer {
             } catch (Exception ex) {
 
             }
+        }
+
+        private void formPanel_Paint(object sender, PaintEventArgs e) {
+            if (_loadedForm == null) return;
+
+            e.Graphics.Clear(SystemColors.Control);
+            _loadedForm.Paint(e.Graphics);
+        }
+
+        private void toolbarPanel_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) {
+                _originClickToolbar = e.Location;
+            }
+        }
+
+        private void toolbarPanel_MouseMove(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) {
+                formBorderPanel.Left += e.X - _originClickToolbar.X;
+                formBorderPanel.Top += e.Y - _originClickToolbar.Y;
+            }
+
+        }
+
+        private void formPanel_MouseMove(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.None) {
+                List<VBControl> hitResult;
+                VBControl deepestHitControl;
+
+                if (_loadedForm == null) return;
+
+                hitResult = _loadedForm.HitTest(e.Location);
+                if (hitResult == null) {
+                    if (_hoveringControl != null) {
+                        _hoveringControl.Focused = false;
+                        formPanel.Invalidate();
+                    }
+                    return;
+                }
+
+                deepestHitControl = hitResult.Last();
+
+                if (deepestHitControl == _hoveringControl) return;
+                if (_hoveringControl != null) _hoveringControl.Focused = false;
+
+                deepestHitControl.Focused = true;
+                _hoveringControl = deepestHitControl;
+
+                formPanel.Invalidate();
+            }
+        }
+
+        private void formPanel_MouseLeave(object sender, EventArgs e) {
+            if (_loadedForm == null) return;
+            if (_hoveringControl != null) _hoveringControl.Focused = false;
         }
     }
 }

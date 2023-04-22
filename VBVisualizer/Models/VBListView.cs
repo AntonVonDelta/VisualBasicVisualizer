@@ -6,16 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace VBVisualizer.Models {
-    public class VBLabel : VBControl {
+    public class VBListView : VBControl {
         public override Color BackgroundColor => Color.White;
 
-        public VBLabel(string name) : base(name) {
-
-        }
-
-        public override void PaintBorder(Graphics graphics) {
-            // No border for label
-            return;
-        }
+        public VBListView(string name) : base(name) { }
     }
 }
