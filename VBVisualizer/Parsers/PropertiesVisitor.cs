@@ -30,6 +30,7 @@ namespace VBVisualizer.Parsers {
             if (controlType == "VB.CommandButton") return new VBButton(controlName);
             if (controlType == "VB.Frame") return new VBFrame(controlName);
             if (controlType == "MSComctlLib.ListView") return new VBListView(controlName);
+            if (controlType == "VB.TextBox") return new VBTextBox(controlName);
 
             return new VBUnknown(controlName);
         }

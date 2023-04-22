@@ -66,6 +66,7 @@
     <Compile Include="Models\VBLabel.cs" />
     <Compile Include="Models\VBListView.cs" />
     <Compile Include="Models\VBFrame.cs" />
+    <Compile Include="Models\VBTextBox.cs" />
     <Compile Include="Models\VBUnknown.cs" />
     <Compile Include="Parsers\PropertiesVisitor.cs" />
     <Compile Include="Program.cs" />
